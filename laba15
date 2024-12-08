@@ -1,0 +1,246 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <iomanip>
+using namespace std;
+
+class bus
+{
+public:
+	string num;
+	string surname;
+	string inicial;
+	int marsh;
+};
+
+void variant()
+{
+	cout << "1. вывод всех автобусов" << endl;
+	cout << "2. добавление автобуса в начало списка" << endl;
+	cout << "3. добавление автобуса перед определенным автобусом" << endl;
+	cout << "4. сведения об автобусах" << endl;
+	cout << "5. удалить данные автобуса и добавляет в маршурыты" << endl;
+	cout << "6. удаляет из маршрута и добавляет в парк" << endl;
+	cout << "0 - выход" << endl;
+}
+void input(bus& avto)
+{
+	cout << "введите номер автобуса: " << endl;
+	cin >> avto.num;
+	cout << "введите фамили водителя: " << endl;
+	cin >> avto.surname;
+	cout << "введите инициалы водителя: " << endl;
+	cin >> avto.inicial;
+	cout << "введите маршрут автобуса: " << endl;
+	cin >> avto.marsh;
+}
+void vstavka(bus& object, stack<bus>&list) 
+{
+	
+	stack<bus>list2;
+	int i = 0;
+	string x;
+	cout << "введите номер автобуса перед которым хотите вставить: " << endl;
+	cin >> x;
+	input(object);
+	while (!list.empty())
+	{
+		if (i == 0 && list.top().num == x)
+		{
+			list2.push(object);
+			break;
+		}
+
+		else if (list.top().num == x)
+		{
+			list2.push(object);
+			break;
+		}
+
+		i++;
+		list2.push(list.top());
+		list.pop();
+	}
+
+	while (!list2.empty())
+	{
+		list.push(list2.top());
+		list2.pop();
+
+	}
+}
+void press5(stack<bus>&list, stack<bus>& superlist) 
+{
+	stack<bus>list3;
+	int i = 0;
+	string x;
+	cout << "введите номер автобуса который идет на маршрут: " << endl;
+	cin >> x;
+	while (!list.empty())
+	{
+		if (i == 0 && list.top().num == x)
+		{
+			superlist.push(list.top());
+			list.pop();
+			break;
+		}
+
+		else if (list.top().num == x)
+		{
+			superlist.push(list.top());
+			list.pop();
+			break;
+		}
+
+		i++;
+		list3.push(list.top());
+		list.pop();
+	}
+
+	while (!list3.empty())
+	{
+		list.push(list3.top());
+		list3.pop();
+
+	}
+}
+void press6(stack<bus>& list, stack<bus>& superlist)
+{
+	stack<bus>list3;
+	int i = 0;
+	string x;
+	cout << "введите номер автобуса который идет на маршрут: " << endl;
+	cin >> x;
+	while (!list.empty())
+	{
+		if (i == 0 && superlist.top().num == x)
+		{
+			list.push(superlist.top());
+			superlist.pop();
+			break;
+		}
+
+		else if (superlist.top().num == x)
+		{
+			list.push(superlist.top());
+			superlist.pop();
+			break;
+		}
+
+		i++;
+		list3.push(superlist.top());
+		superlist.pop();
+	}
+
+	while (!list3.empty())
+	{
+		superlist.push(list3.top());
+		list3.pop();
+
+	}
+}
+
+
+
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	stack<bus>officerlist;
+	stack<bus>list1;
+	stack<bus>superlist;
+	stack<bus>output1;
+	stack<bus>output2;
+	bool proverka = true;
+	bus object;
+	do {
+		int v;
+		variant();
+		cout << "сделайте выбор: " << endl;
+		cin >> v;
+		
+
+		switch (v) {
+		case 1:
+			
+			while(!officerlist.empty()) // пустой ли лист
+			{
+				cout << "номер автобуса: " << officerlist.top().num;   // функция top для чтения
+				cout << "\t фамилия водителя: " << officerlist.top().surname;
+				cout << "\t инициалы водителя: " << officerlist.top().inicial;
+				cout << "\t номер маршрута: " << officerlist.top().marsh << endl;
+				list1.push(officerlist.top());
+				officerlist.pop();
+			}
+			while (!list1.empty())
+			{
+				officerlist.push(list1.top());
+				list1.pop();
+			}
+			break;
+		case 2:
+			int size;
+			cout << "введите кол-во автобусов: " << endl;
+			cin >> size;
+			for (int i = 0; i < size; i++) {
+				input(object);
+				officerlist.push(object); // добавление в начало списка
+
+			}
+			break;
+		case 3:
+			
+			vstavka(object, officerlist);	
+			break;
+
+		case 4:
+
+			while (!officerlist.empty()) 
+			{
+				
+				cout << " номер автобуса: " << officerlist.top().num;
+				cout << "\t фамилия водителя: " << officerlist.top().surname;
+				cout << "\t инициалы водителя: " << officerlist.top().inicial;
+				cout << "\t номер маршрута: " << officerlist.top().marsh << endl;
+				output1.push(officerlist.top());
+				officerlist.pop();
+			}
+			while (!output1.empty())
+			{
+				officerlist.push(output1.top());
+				output1.pop();
+			}
+			cout << "-------------------------------------------------------------------------------------------" << endl;
+			while (!superlist.empty()) {
+	
+				cout << " номер автобуса: " << superlist.top().num;
+				cout << "\t фамилия водителя: " << superlist.top().surname;
+				cout << "\t инициалы водителя: " << superlist.top().inicial;
+				cout << "\t номер маршрута: " << superlist.top().marsh << endl;
+				output2.push(superlist.top());
+				superlist.pop();
+			}
+
+			while (!output2.empty())
+			{
+				superlist.push(output2.top());
+				output2.pop();
+			}
+			break;
+		case 5:
+			press5(officerlist, superlist);
+			break;
+		case 6:
+			press6(officerlist, superlist);
+			break;
+			
+		case 0:
+			proverka = false;
+			break;
+		}
+	} while (proverka != false);
+
+
+	return 0;
+}
